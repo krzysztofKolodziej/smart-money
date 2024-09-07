@@ -8,14 +8,17 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class Config {
-    @Value("$nbpApi.exchangeRates.url")
+    @Value("${nbpApi.exchangeRates.url}")
     private String exchangeRatesUrl;
 
     @Bean
     public WebClient webClient() {
-        return WebClient.builder()
-                .baseUrl(exchangeRatesUrl)
-                .build();
+        return WebClient.builder().build();
+    }
+
+    @Bean
+    public CurrencyService currencyService(WebClient webClient) {
+        return new CurrencyService(webClient, exchangeRatesUrl);
     }
 
 }
