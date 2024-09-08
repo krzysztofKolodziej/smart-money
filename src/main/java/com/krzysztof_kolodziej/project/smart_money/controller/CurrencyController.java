@@ -16,7 +16,6 @@ import java.util.List;
 public class CurrencyController {
     private CurrencyService currencyService;
 
-
     @GetMapping("/currency/{date}")
     public ResponseEntity<List<Currency>> getCurrency(@PathVariable String date) {
         List<Currency> currency = currencyService.getCurrency(date);

@@ -1,5 +1,6 @@
 package com.krzysztof_kolodziej.project.smart_money;
 
+import com.krzysztof_kolodziej.project.smart_money.service.CurrencyMapper;
 import com.krzysztof_kolodziej.project.smart_money.service.CurrencyService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +18,8 @@ public class Config {
     }
 
     @Bean
-    public CurrencyService currencyService(WebClient webClient) {
-        return new CurrencyService(webClient, exchangeRatesUrl);
+    public CurrencyService currencyService(WebClient webClient, CurrencyMapper currencyMapper) {
+        return new CurrencyService(exchangeRatesUrl, webClient, currencyMapper);
     }
 
 }
