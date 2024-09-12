@@ -11,10 +11,14 @@ public class CurrencyService {
     private String exchangeRatesUrl;
     private WebClient webClient;
     private CurrencyMapper currencyMapper;
+    private CurrencyValidate currencyValidate;
 
     public List<Currency> getCurrency(String date) {
+        String validateUrl = currencyValidate.validateUrl(exchangeRatesUrl);
+        String validateDate = currencyValidate.validateDate(date);
+
         CurrencyDto[] currencyDto = webClient.get()
-                .uri(exchangeRatesUrl, date)
+                .uri(validateUrl, validateDate)
                 .retrieve()
                 .bodyToMono(CurrencyDto[].class)
                 .block();
