@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.io.IOException;
 
@@ -46,7 +47,7 @@ class CurrencyServiceTest {
     }
 
     @Test
-    void testGetCurrencySuccess() throws InterruptedException {
+    void testGetCurrencySuccess(){
         //given
         String date = "2024-09-10";
 
@@ -73,6 +74,22 @@ class CurrencyServiceTest {
         verify(currencyValidate).validateDate(date);
         verify(currencyMapper).getMapCurrencyList(any(CurrencyDto[].class));
     }
+
+    @Test
+    void testGetCurrencyNotFound()  {
+        //given
+        when(currencyValidate.validateUrl(anyString())).thenReturn(mockWebServer.url("/exchange-rates").toString());
+        when(currencyValidate.validateDate(anyString())).thenReturn("2024-09-18");
+
+        //when
+        mockWebServer.enqueue(new MockResponse().setResponseCode(404));
+
+        //then
+        assertThrows(WebClientResponseException.NotFound.class, () -> {
+            currencyService.getCurrency("2024-09-18");
+        });
+    }
+
 
 
 
