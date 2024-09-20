@@ -7,7 +7,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.web.reactive.function.client.WebClient;
@@ -78,20 +77,18 @@ class CurrencyServiceTest {
     @Test
     void testGetCurrencyNotFound()  {
         //given
-        when(currencyValidate.validateUrl(anyString())).thenReturn(mockWebServer.url("/exchange-rates").toString());
-        when(currencyValidate.validateDate(anyString())).thenReturn("2024-09-18");
+        String date = "2024-09-10";
+
+        when(currencyValidate.validateUrl(anyString())).thenReturn("/api");
+        when(currencyValidate.validateDate(date)).thenReturn(date);
+        when(currencyMapper.getMapCurrencyList(any(CurrencyDto[].class))).thenReturn(getCurrency());
 
         //when
         mockWebServer.enqueue(new MockResponse().setResponseCode(404));
 
         //then
-        assertThrows(WebClientResponseException.NotFound.class, () -> {
-            currencyService.getCurrency("2024-09-18");
-        });
+        assertThrows(WebClientResponseException.NotFound.class, () -> currencyService.getCurrency("2024-09-18"));
     }
-
-
-
 
     private static List<Currency> getCurrency() {
         return List.of( Currency.builder()
@@ -100,17 +97,4 @@ class CurrencyServiceTest {
                 .mid(4.23F)
                 .build());
     }
-
-    private static List<CurrencyDto> getCurrencyDto() {
-        CurrencyDto[] currencyDtoArray = new CurrencyDto[]{
-                new CurrencyDto(new CurrencyDto.Rates[]{
-                        new CurrencyDto.Rates("Dolar amerykanski", "USD", 4.1234F),
-                        new CurrencyDto.Rates("Funt szwajcarski", "CHF", 4.5333F),
-                        new CurrencyDto.Rates("Euro", "EUR", 4.6000F)
-                })
-        };
-        return Arrays.stream(currencyDtoArray).toList();
-    }
-
-
 }

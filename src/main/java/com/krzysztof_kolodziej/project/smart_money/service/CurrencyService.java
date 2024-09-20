@@ -26,7 +26,6 @@ public class CurrencyService {
                 .bodyToMono(CurrencyDto[].class)
                 .onErrorResume(WebClientResponseException.NotFound.class, Mono::error)
                 .block();
-
         return currencyMapper.getMapCurrencyList(currencyDto);
     }
 
