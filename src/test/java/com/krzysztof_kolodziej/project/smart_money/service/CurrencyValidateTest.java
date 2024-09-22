@@ -39,4 +39,23 @@ class CurrencyValidateTest {
                 .withMessage("404 NOT_FOUND \"Invalid date type\"");
     }
 
+    @Test
+    void shouldThrowExceptionWhenDateIsInvalid() {
+        assertThatExceptionOfType(ResponseStatusException.class)
+                .isThrownBy(() -> currencyValidate.validateDate("22.07.2022"))
+                .withMessage("404 NOT_FOUND \"Invalid date type\"");
+    }
+
+    @Test
+    void shouldReturnDateWhenDataIsCorrect() {
+        //given
+        String date = "2022-07-22";
+
+        //when
+        String string = currencyValidate.validateDate(date);
+
+        //then
+        assertThat(string).isEqualTo("2022-07-22");
+    }
+
 }
