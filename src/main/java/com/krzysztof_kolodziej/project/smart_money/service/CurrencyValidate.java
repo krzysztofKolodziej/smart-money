@@ -1,7 +1,5 @@
 package com.krzysztof_kolodziej.project.smart_money.service;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,7 +22,7 @@ public class CurrencyValidate {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             validDate = LocalDate.parse(date, dateTimeFormatter);
-        } catch (DateTimeParseException e) {
+        } catch (DateTimeParseException | NullPointerException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid date type");
         }
         return validDate.toString();
